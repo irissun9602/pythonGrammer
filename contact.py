@@ -23,6 +23,12 @@ def set_contact():
      contact = Contact(name,phone_number,e_mail, addr)
      return contact
 
+# 연락처 출력
+def print_contact(contact_list):
+    for contact in contact_list:
+        contact.print_info()
+
+
 # 메인 메뉴 구성
 def print_menu():
     print("1. 연락처 입력")
@@ -41,6 +47,8 @@ def run():
         if menu == 1:
             contact = set_contact() # 데이터 입력
             contact_list.append(contact) #주소록 추가
+        elif menu == 2:
+            print_contact(contact_list)
         elif menu == 4: # 종료 조건
             break
 
