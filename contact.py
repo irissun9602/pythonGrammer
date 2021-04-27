@@ -28,6 +28,11 @@ def print_contact(contact_list):
     for contact in contact_list:
         contact.print_info()
 
+# 연락처 삭제
+def delete_contact(contact_list, name):
+    for i, contact in enumerate(contact_list):
+        if contact.name == name:
+            del contact_list[i]
 
 # 메인 메뉴 구성
 def print_menu():
@@ -48,7 +53,10 @@ def run():
             contact = set_contact() # 데이터 입력
             contact_list.append(contact) #주소록 추가
         elif menu == 2:
-            print_contact(contact_list)
+            print_contact(contact_list) # 주소록 출력
+        elif menu == 3:
+            name = input("Name: ") # 삭제할 연락처 이름 입력
+            delete_contact(contact_list, name) # 해당 연락처 삭제
         elif menu == 4: # 종료 조건
             break
 
