@@ -20,10 +20,30 @@ def set_contact():
      phone_number = input("Phone Number: ")
      e_mail = input("Email: ")
      addr = input("Address: ")
-     print(name, phone_number, e_mail, addr)
+     contact = Contact(name,phone_number,e_mail, addr)
+     return contact
 
+# 메인 메뉴 구성
+def print_menu():
+    print("1. 연락처 입력")
+    print("2. 연락처 출력")
+    print("3. 연락처 삭제")
+    print("4. 종료")
+    menu = input("메뉴선택: ")
+    return int(menu)
+
+# 메뉴 반복 출력
 def run():
-   set_contact()
+    contact_list = [] # 주소록 리스트
+
+    while 1:
+        menu = print_menu() # 메뉴 선택
+        if menu == 1:
+            contact = set_contact() # 데이터 입력
+            contact_list.append(contact) #주소록 추가
+        elif menu == 4: # 종료 조건
+            break
+
 
 
 if __name__ == "__main__":
