@@ -20,6 +20,7 @@ def set_contact():
      phone_number = input("Phone Number: ")
      e_mail = input("Email: ")
      addr = input("Address: ")
+     print(name, phone_number, e_mail, addr)
 
 def run():
    set_contact()
