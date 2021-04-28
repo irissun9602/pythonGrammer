@@ -38,10 +38,26 @@ def delete_contact(contact_list, name):
 def store_contact(contact_list):
     f = open("contact_db.txt", "wt")
     for contact in contact_list:
-        f.write(contact.name + '/n')
-        f.write(contact.phone_number + '/n')
-        f.write(contact.e_mail + '/n')
-        f.write(contact.addr + '/n')
+        f.write(contact.name + '\n')
+        f.write(contact.phone_number + '\n')
+        f.write(contact.e_mail + '\n')
+        f.write(contact.addr + '\n')
+    f.close()
+
+# 연락처 파일 불러들이기
+def load_contact(contact_list):
+    f = open("contact_db.txt", "rt")
+    lines = f.readlines()
+    num = len(lines)/4  # 연락처 개수 계산
+    num = int(num)
+
+    for i in range(num):
+        name = lines[4*i].rstrip('\n')
+        phone = lines[4*i+1].rstrip('\n')
+        email  = lines[4*i+2].rstrip('\n')
+        addr = lines[4*i+3].rstrip('\n')
+        contact = Contact(name, phone, email, addr)
+        contact_list.append(contact)
     f.close()
 
 # 메인 메뉴 구성
@@ -56,6 +72,7 @@ def print_menu():
 # 메뉴 반복 출력
 def run():
     contact_list = [] # 주소록 리스트
+    load_contact(contact_list)
 
     while 1:
         menu = print_menu() # 메뉴 선택
@@ -68,7 +85,7 @@ def run():
             name = input("Name: ") # 삭제할 연락처 이름 입력
             delete_contact(contact_list, name) # 해당 연락처 삭제
         elif menu == 4: # 종료 조건
-            store_contact(contact_list)
+            store_contact(contact_list) # 연락처 파일 저장
             break
 
 
