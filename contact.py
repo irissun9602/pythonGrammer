@@ -53,26 +53,11 @@ def store_contact(contact_list):
         f.write(contact.addr+ '\n')
     f.close()
 
-# 연락처 파일 불러들이기
-def load_contact(contact_list):
-    f = open("contact_db.txt", "rt")
-    lines = f.readlines()
-    num = len(lines) / 4
-    num = int(num)
 
-    for i in range(num):
-        name = lines[4*i].rstrip('/n')
-        phone = lines[4*i+1].rstrip('/n')
-        email = lines[4*i+2].rstrip('/n')
-        addr = lines[4*i+3].rstrip('/n')
-        contact =Contact(name, phone, email, addr)
-        contact_list.append(contact)
-    f.close()
 
 # 메뉴 반복 출력
 def run():
     contact_list = [] # 주소록 리스트
-    load_contact(contact_list)
 
     while 1:
         menu = print_menu() # 메뉴 선택
