@@ -36,7 +36,7 @@ def delete_contact(contact_list, name):
 
 # 연락처 파일로 저장
 def store_contact(contact_list):
-    f = open("contact_db.txt", "wt")
+    f = open("basic/contact_db.txt", "wt")
     for contact in contact_list:
         f.write(contact.name + '\n')
         f.write(contact.phone_number + '\n')
@@ -46,7 +46,7 @@ def store_contact(contact_list):
 
 # 연락처 파일 불러들이기
 def load_contact(contact_list):
-    f = open("contact_db.txt", "rt")
+    f = open("basic/contact_db.txt", "rt")
     lines = f.readlines()
     num = len(lines)/4  # 연락처 개수 계산
     num = int(num)
