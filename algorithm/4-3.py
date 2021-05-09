@@ -1,7 +1,7 @@
 #현재 나이트의 위치 입력받기
 now_location = input()
-row = int(now_location[1]) - 1 #인덱스 0부터 시작하는 열
-column = int(ord(now_location[0])) - int(ord('a'))   #인덱스 0부터 시작하는 행
+row = int(now_location[1]) - 1 #인덱스 0부터 시작하는 행
+column = int(ord(now_location[0])) - int(ord('a'))   #인덱스 0부터 시작하는 열
 
 print(row, column)
 steps = [(-2, -1), (-2, 1), (2, 1), (2, -1), (-1, 2), (-1, -2), (1, 2), (1, -2)]
