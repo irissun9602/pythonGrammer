@@ -1,3 +1,4 @@
+# 10.4Trackbar 생성하1
 import cv2
 import numpy as np
 

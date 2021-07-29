@@ -1,3 +1,4 @@
+# 9.4 이미지 읽어오기 + 선 그리기
 import cv2 as cv
 import numpy as np
 # 이미지 읽어오기

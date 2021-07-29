@@ -1,4 +1,4 @@
-# 마우스 이벤트 활용하기
+# 10.2 마우스 이벤트 활용하기
 
 import cv2
 import numpy as np

@@ -1,3 +1,4 @@
+# 10.3 카메라 영상에 시간 출력
 import cv2
 import time
 

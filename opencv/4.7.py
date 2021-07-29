@@ -1,3 +1,4 @@
+# 10.5 아날로그 시계 시침, 분침 그리기
 import cv2
 import time
 from math import *
@@ -13,12 +14,15 @@ while True:
     min = now.tm_min
 
 
-
+    # 시침의 이동량
     Ang_Min = min *6
+    # 분침의 이동량
     Ang_Hour = hour*30 + min*0.5
 
-    radian = (90-Ang_Hour) * 3.141592 / 180.0
-    radian2 = (90 - Ang_Min) * 3.141592 / 180.0
+    #12시를 시초선으로 시침, 분침의 이동량을 라디안 값으로 변환(각도*파이/180.0)
+    radian = (90-Ang_Hour) * 3.141592 / 180.0 # 시침 각도
+    radian2 = (90 - Ang_Min) * 3.141592 / 180.0 # 분침 각도
+
     # 시침 그리기
     x_pos = int(150 * cos(radian))
     y_pos = int(150 * sin(radian))
