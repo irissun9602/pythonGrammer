@@ -2,7 +2,7 @@
 import cv2 as cv
 import numpy as np
 # 이미지 읽어오기
-img = cv.imread("input/1616588556114.jpg", 1)
+img = cv.imread("../input/1616588556114.jpg", 1)
 
 height = img.shape[0]
 width = img.shape[1]

@@ -4,7 +4,7 @@ import os
 import cv2
 
 # 영상 읽기
-path = os.path.join('input', 'lime.jpg')
+path = os.path.join('../input', 'lime.jpg')
 img1 = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 
 types = [cv2.THRESH_BINARY,
