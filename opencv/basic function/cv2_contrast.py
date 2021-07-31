@@ -49,9 +49,3 @@ for (name, out) in displays:
 # 키보드 입력을 기다린 후 모든 영상창 닫기
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-# 영상 저장
-save_dir = './code_res_imgs/c2_contrast'
-createFolder(save_dir)
-for (name, out) in displays:
-    cv2.imwrite(save_dir + "/" + name + ".jpg", out)
