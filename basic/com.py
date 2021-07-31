@@ -9,4 +9,4 @@ write_ws['A1'] = '숫자'
 
 write_ws.append([1,2,3,])
 
-write_wb.save('/Users/ms/PycharmProjects/pythonGrammer/basic/숫자.xlsx')
+write_wb.save('/Users/ms/PycharmProjects/pythonGrammer/basic function/숫자.xlsx')
