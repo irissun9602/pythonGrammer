@@ -8,7 +8,9 @@ from matplotlib import pyplot as plt
 path = os.path.join('../input', 'img_6_0.png')
 img1 = cv2.imread(path)
 
-template = img1[5:70, 5:70]
+path = os.path.join('../input', 'img_6_0_template.png')
+template = cv2.imread(path)
+template = template[30:100,30:100]
 w,h = template.shape[:-1]
 
 methods = ['cv2.TM_CCOEFF',
