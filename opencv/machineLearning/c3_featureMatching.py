@@ -42,12 +42,12 @@ def bruteForce(img1, img2):
             img2KP = np.float32([keyP2[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
             _m, mask = cv2.findHomography(img1KP, img2KP, cv2.RANSAC, 5.0)
             ransacMask = mask.ravel().tolist()
-# drawParmas
-            resKnn = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, [good], None, flags=flag)
-            resKnn2 = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, good, None, matchColor=(0, 255, 0),
+            drawParams = dict(matchColor=(0, 255, 0),
                               singlePointColor=(0, 0, 255),
                               matchesMask=ransacMask,
                               flags=flag)
+            resKnn = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, [good], None, flags=flag)
+            resKnn2 = cv2.drawMatches(img1, keyP1, img2, keyP2, good, None, **drawParams)
 
 
 # FLANN 기반 매칭
@@ -125,8 +125,8 @@ def mouse_callback(event, x, y, flags, param):
         cv2.imshow(viewName, imgROI)
 
         roi = cv2.cvtColor(img1[startY:endY, startX:endX], cv2.COLOR_BGR2GRAY)
-        flann(roi, cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY))
         bruteForce(roi, cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY))
+        flann(roi, cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY))
 
 
 # 영상 읽기
