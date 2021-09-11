@@ -9,43 +9,46 @@ viewName = 'input image'
 # 특징 선언
 sift = cv2.xfeatures2d.SIFT_create()
 surf = cv2.xfeatures2d.SURF_create()
-brisk = cv2.xfeatures2d.BRISK_create()
-orb = cv2.xfeatures2d.ORB_create()
+#brisk = cv2.xfeatures2d.BRISK_create()
+#orb = cv2.xfeatures2d.ORB_create()
+
 
 # Brute-Force 기반 매칭
-def BruteForce(img1, img2):
-    methods =[(sift, cv2.NORM_L2, 'bf_sift'),
-              (surf, cv2.NORM_L2, 'bf_surf'),
-              (brisk, cv2.NORM_L2, 'bf_brisk'),
-              (orb, cv2.NORM_L2, 'bf_orb')]
+def bruteForce(img1, img2):
+    methods = [(sift, cv2.NORM_L2, 'bf_sift'),
+               (surf, cv2.NORM_L2, 'bf_surf')
+#               (brisk, cv2.NORM_L2, 'bf_brisk'),
+#              (orb, cv2.NORM_L2, 'bf_orb')
+                             ]
     flag = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS
     for (method, dist, name) in methods:
         keyP1, des1 = method.detectAndCompute(img1, None)
         keyP2, des2 = method.detectAndCompute(img2, None)
         # Brute Force 선언 및 매칭 수행
         bf = cv2.BFMatcher_create(dist, True)
-        mat = bf.mathc(des1, des2)
-        mat = sorted(mat, key=lambda x:x.distance)
-        res = cv2.drawmatches(img1, keyP1, img2, keyP2, mat, None, flags=flag)
+        mat = bf.match(des1, des2)
+        mat = sorted(mat, key=lambda x: x.distance)
+        res = cv2.drawMatches(img1, keyP1, img2, keyP2, mat, None, flags=flag)
         bfKnn = cv2.BFMatcher()
-        matKnn = cv2.BFMatcher()
+        matKnn = bfKnn.knnMatch(des1, des2, k=2)
         # 매칭 결과 선별
         good = []
-        for m , n in matKnn:
-            if m.distance < 0.75*n.distance:
+        for m, n in matKnn:
+            if m.distance < 0.75 * n.distance:
                 good.append(m)
         # 기하하적 관계 기반의 매칭 결과 선별
         if len(good) >= minMatchCount:
-            img1KP = np.float32([keyP1[m.queryIdx].pt for m in good]).reshape(-1 ,1, 2)
+            img1KP = np.float32([keyP1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
             img2KP = np.float32([keyP2[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
             _m, mask = cv2.findHomography(img1KP, img2KP, cv2.RANSAC, 5.0)
             ransacMask = mask.ravel().tolist()
-            drawParams = dict(matchColor=(0,255,0),
-                              singlePointColor=(0,0,255),
+# drawParmas
+            resKnn = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, [good], None, flags=flag)
+            resKnn2 = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, good, None, matchColor=(0, 255, 0),
+                              singlePointColor=(0, 0, 255),
                               matchesMask=ransacMask,
                               flags=flag)
-            resKnn = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, [good], None, flags=flag)
-            resKnn2 = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, good, None, **drawParams)
+
 
 # FLANN 기반 매칭
 def flann(img1, img2):
@@ -55,15 +58,15 @@ def flann(img1, img2):
     searchParms = dict(checks=50)
     flannIndexKdtree = cv2.FlannBasedMatcher(indexParmasKdtree, searchParms)
     flannIndexLsh = 6
-    indexParmasLsh =dict(algorithm=flannIndexLsh,
-                         table_number=6,
-                         key_size=12,
-                         multi_probe_level=1)
-    flannLsh = cv2.FlannBaseMatcher(indexParmasLsh, searchParms)
+    indexParmasLsh = dict(algorithm=flannIndexLsh,
+                          table_number=6,
+                          key_size=12,
+                          multi_probe_level=1)
+    flannLsh = cv2.FlannBasedMatcher(indexParmasLsh, searchParms)
     methods = [(sift, flannIndexKdtree, 'flann_sift'),
-               (surf, flannIndexKdtree, 'flann_surf'),
-               (brisk, flannIndexKdtree, 'flann_brisk'),
-               (orb, flannIndexKdtree, 'flann_orb')]
+               (surf, flannIndexKdtree, 'flann_surf')]
+#               (brisk, flannIndexKdtree, 'flann_brisk'),
+#               (orb, flannIndexKdtree, 'flann_orb')]
     flag1 = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS
     flag2 = cv2.DrawMatchesFlags_DEFAULT
     # 매칭 수행
@@ -71,16 +74,16 @@ def flann(img1, img2):
         keyP1, des1 = method.detectAndCompute(img1, None)
         keyP2, des2 = method.detectAndCompute(img2, None)
         mat = matcher.match(des1, des2)
-        mat = sorted(mat, key=lambda x:x.distance)
+        mat = sorted(mat, key=lambda x: x.distance)
         res = cv2.drawMatches(img1, keyP1, img2, keyP2, mat, None, flags=flag1)
         cv2.imshow(name, res)
-        cv2.imwrite("../code_res_imgs/"+name+".jpg", res)
-        matKnn = matcher.KnnMatch(des1, des2, k=2)
+        cv2.imwrite("../code_res_imgs/" + name + ".jpg", res)
+        matKnn = matcher.knnMatch(des1, des2, k=2)
         print(name, len(matKnn))
         if len(matKnn) >= minMatchCount:
-            matKnnMask = [[0,0] for i in range(len(matKnn))]
-            for i, (m,n) in enumerate(matKnn):
-                if m.distance <0.75*n.distance:
+            matKnnMask = [[0, 0] for i in range(len(matKnn))]
+            for i, (m, n) in enumerate(matKnn):
+                if m.distance < 0.75 * n.distance:
                     matKnnMask[i] = [1, 0]
             drawParams = dict(matchColor=(0, 255, 0),
                               singlePointColor=(0, 0, 255),
@@ -88,15 +91,16 @@ def flann(img1, img2):
                               flags=flag2)
             resKnn = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, matKnn, None, **drawParams)
 
+
 # 마우스 이벤트
-def mouse_callback(event, x ,y, flags, param):
+def mouse_callback(event, x, y, flags, param):
     global startX, startY, mouseDrawing
     imgROI = img1.copy()
     # 마우스 이벤트 시작 위치
     if event == cv2.EVENT_LBUTTONDOWN:
         mouseDrawing = True
         startX, startY = x, y
-        cv2.circle(imgROI, (x,y), 2, (255, 255, 255), -1)
+        cv2.circle(imgROI, (x, y), 2, (255, 255, 255), -1)
         cv2.imshow(viewName, imgROI)
     # 마우스 이동 위치
     elif event == cv2.EVENT_MOUSEMOVE:
@@ -106,12 +110,14 @@ def mouse_callback(event, x ,y, flags, param):
     # 마우스 이벤트 종료 위치
     elif event == cv2.EVENT_LBUTTONUP:
         mouseDrawing = False
-        endX = x ; endY = y
+        endX = x;
+        endY = y
         # 마우스 움직임 보정
-        if startX > endX :
+        if startX > endX:
             tempX = startX
-            startX = endX; endX = tempX
-        if startY > endY :
+            startX = endX;
+            endX = tempX
+        if startY > endY:
             tempY = startY
             startY = endY
             endY = tempY
@@ -119,11 +125,12 @@ def mouse_callback(event, x ,y, flags, param):
         cv2.imshow(viewName, imgROI)
 
         roi = cv2.cvtColor(img1[startY:endY, startX:endX], cv2.COLOR_BGR2GRAY)
-        BruteForce(roi, cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY))
         flann(roi, cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY))
+        bruteForce(roi, cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY))
+
 
 # 영상 읽기
-img1 = cv2.imread("../images/img20.jpg", cv2.IMREAD_UNCHANGED, 320, 240)
+img1 = cv2.imread("../input/img20.jpg", cv2.IMREAD_UNCHANGED)
 
 # 마우스 이벤트 기반 특징 매칭
 cv2.imshow(viewName, img1)
