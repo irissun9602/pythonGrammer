@@ -49,6 +49,44 @@ def BruteForce(img1, img2):
 
 # FLANN 기반 매칭
 def flann(img1, img2):
+    # flann 변수 설정
+    flannIndexKdtree = 1
+    indexParmasKdtree = dict(algorithm=flannIndexKdtree, tree=5)
+    searchParms = dict(checks=50)
+    flannIndexKdtree = cv2.FlannBasedMatcher(indexParmasKdtree, searchParms)
+    flannIndexLsh = 6
+    indexParmasLsh =dict(algorithm=flannIndexLsh,
+                         table_number=6,
+                         key_size=12,
+                         multi_probe_level=1)
+    flannLsh = cv2.FlannBaseMatcher(indexParmasLsh, searchParms)
+    methods = [(sift, flannIndexKdtree, 'flann_sift'),
+               (surf, flannIndexKdtree, 'flann_surf'),
+               (brisk, flannIndexKdtree, 'flann_brisk'),
+               (orb, flannIndexKdtree, 'flann_orb')]
+    flag1 = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS
+    flag2 = cv2.DrawMatchesFlags_DEFAULT
+    # 매칭 수행
+    for (method, matcher, name) in methods:
+        keyP1, des1 = method.detectAndCompute(img1, None)
+        keyP2, des2 = method.detectAndCompute(img2, None)
+        mat = matcher.match(des1, des2)
+        mat = sorted(mat, key=lambda x:x.distance)
+        res = cv2.drawMatches(img1, keyP1, img2, keyP2, mat, None, flags=flag1)
+        cv2.imshow(name, res)
+        cv2.imwrite("../code_res_imgs/"+name+".jpg", res)
+        matKnn = matcher.KnnMatch(des1, des2, k=2)
+        print(name, len(matKnn))
+        if len(matKnn) >= minMatchCount:
+            matKnnMask = [[0,0] for i in range(len(matKnn))]
+            for i, (m,n) in enumerate(matKnn):
+                if m.distance <0.75*n.distance:
+                    matKnnMask[i] = [1, 0]
+            drawParams = dict(matchColor=(0, 255, 0),
+                              singlePointColor=(0, 0, 255),
+                              matchesMask=matKnnMask,
+                              flags=flag2)
+            resKnn = cv2.drawMatchesKnn(img1, keyP1, img2, keyP2, matKnn, None, **drawParams)
 
 # 마우스 이벤트
 def mouse_callback(event, x ,y, flags, param):
