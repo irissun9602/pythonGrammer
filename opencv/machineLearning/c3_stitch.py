@@ -34,7 +34,7 @@ status3, pano3 = stitcher.stitch(imgs3)
 if status3 != cv2.Stitcher_OK:
     print("Can't stitch imgs3, error code =%d" % status3)
     exit(-1)
-cv2.imshow('stitch', stitcher)
+#cv2.imshow('stitch', stitcher)
 # 키보드 입력을 기다린 후 모든 영상창 닫기
 cv2.waitKey(0)
 cv2.destroyAllWindows()
