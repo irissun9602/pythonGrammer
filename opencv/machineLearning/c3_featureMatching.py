@@ -12,7 +12,6 @@ surf = cv2.xfeatures2d.SURF_create()
 #brisk = cv2.xfeatures2d.BRISK_create()
 #orb = cv2.xfeatures2d.ORB_create()
 
-
 # Brute-Force 기반 매칭
 def bruteForce(img1, img2):
     methods = [(sift, cv2.NORM_L2, 'bf_sift'),
